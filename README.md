@@ -10,6 +10,7 @@ yarn add use-redux
 
 ## usage
 
+### old fashion
 You can use `use-redux` the same way you use `react-redux`.
 
 First, surround your top component with the `ReduxProvider` and provide a redux store through the `store` prop.
@@ -47,3 +48,17 @@ const mapDispatchToProps = dispatch => ({ onClick: () => dispatch({ type: 'INCRE
 
 export default connect(mapStateToProps, mapDispatchToProps)(Count);
 ```
+
+### use-redux
+You can get the redux state and the dispatch function with `useRedux` custom hooks.
+
+```jsx
+import { useRedux } from 'use-redux';
+
+export const MyComponent = props => {
+  const [ state, dispatch ] = useRedux();
+
+  return <div>Foo</div>
+};
+```
+This way you can read the redux state in the `state` variable, and dispatch redux action with the `dispatch` function.
