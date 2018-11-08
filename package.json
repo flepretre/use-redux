@@ -1,21 +1,28 @@
 {
   "name": "use-redux",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React binding for Redux using react's hooks",
   "main": "./lib/index.js",
-  "files": ["lib/"],
+  "files": [
+    "lib/"
+  ],
   "author": "Florent Lepretre <florent.lepretre@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/flepretre/use-redux",
-  "keywords": ["redux", "react", "hooks", "state"],
+  "keywords": [
+    "redux",
+    "react",
+    "hooks",
+    "state"
+  ],
   "devDependencies": {
-    "@m6web/eslint-plugin-react": "3.1.0",
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@m6web/eslint-plugin-react": "3.1.0",
     "babel-preset-minify": "^0.4.0",
     "react": "^16.7.0-alpha.0",
     "rollup": "^0.67.0",
