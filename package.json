@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "React binding for Redux using react's hooks",
   "main": "./lib/index.js",
+  "files": ["lib/"],
   "author": "Florent Lepretre <florent.lepretre@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/flepretre/use-redux",
+  "keywords": ["redux", "react", "hooks", "state"],
   "devDependencies": {
     "@m6web/eslint-plugin-react": "3.1.0",
     "@babel/cli": "^7.1.2",
