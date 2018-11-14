@@ -16,27 +16,21 @@
     "state"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "@m6web/eslint-plugin-react": "3.1.0",
-    "babel-preset-minify": "^0.4.0",
+    "@babel/core": "7.1.6",
+    "@babel/plugin-proposal-class-properties": "7.1.0",
+    "@babel/plugin-syntax-object-rest-spread": "7.0.0",
+    "@babel/preset-env": "7.1.6",
+    "@babel/preset-react": "7.0.0",
+    "babel-loader": "8.0.4",
     "react": "^16.7.0-alpha.0",
-    "rollup": "^0.67.0",
-    "rollup-plugin-babel": "^4.0.3",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-uglify": "^6.0.0"
+    "uglifyjs-webpack-plugin": "2.0.1",
+    "webpack": "4.25.1",
+    "webpack-cli": "^3.1.2"
   },
   "peerDependencies": {
     "react": "^16.7.0-alpha.0"
   },
-  "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
-  },
   "scripts": {
-    "build": "rollup -c"
+    "build": ""
   }
 }
