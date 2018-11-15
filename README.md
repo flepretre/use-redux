@@ -1,3 +1,4 @@
+![build status](https://travis-ci.org/flepretre/use-redux.svg)
 # use-redux
 
 React-redux with new react hooks
