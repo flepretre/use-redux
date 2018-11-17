@@ -31,6 +31,6 @@
     "react": "^16.7.0-alpha.0"
   },
   "scripts": {
-    "build": ""
+    "build": "webpack"
   }
 }
