@@ -25,6 +25,7 @@
     "@m6web/eslint-plugin-react": "3.1.0",
     "babel-preset-minify": "^0.4.0",
     "react": "^16.8.1",
+    "react-redux": "^6.0.0",
     "rollup": "^0.67.0",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-node-resolve": "^3.4.0",

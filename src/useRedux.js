@@ -1,8 +1,8 @@
 import React, { memo, useContext, useEffect, useState } from 'react';
-import Context from './context';
+import { ReactReduxContext } from 'react-redux';
 
 export const useRedux = () => {
-  const store = useContext(Context);
+  const store = useContext(ReactReduxContext);
   const [reduxState, setReduxState] = useState(store.getState());
 
   useEffect(() => {
