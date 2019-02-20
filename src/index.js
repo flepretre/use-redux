@@ -1,2 +1,2 @@
-export { Provider as ReduxProvider } from 'react-redux';
-export { useRedux, connect } from './useRedux';
+export { Provider as ReduxProvider, connect } from 'react-redux';
+export { useRedux } from './useRedux';
