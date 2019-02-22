@@ -40,6 +40,7 @@
     "babel-core": "7.0.0-bridge.0"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "format": "prettier-eslint --write 'src/**/*.js'"
   }
 }
