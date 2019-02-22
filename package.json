@@ -15,6 +15,9 @@
     "hooks",
     "state"
   ],
+  "dependencies": {
+    "react-redux": "^6.0.0"
+  },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
