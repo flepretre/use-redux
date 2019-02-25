@@ -1,6 +1,6 @@
 {
   "name": "use-redux",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "React binding for Redux using react's hooks",
   "main": "./lib/index.js",
   "module": "es/index.js",
