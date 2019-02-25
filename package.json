@@ -24,6 +24,8 @@
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
     "@m6web/eslint-plugin-react": "3.2.0",
+    "babel-jest": "24.1.0",
+    "jest": "24.1.0",
     "react": "16.8.3",
     "react-redux": "6.0.1",
     "redux": "4.0.1"
@@ -36,6 +38,7 @@
     "build": "yarn build:commonjs && yarn build:es",
     "build:commonjs": "BABEL_ENV=commonjs babel src --out-dir lib --ignore src/__tests__/*",
     "build:es": "BABEL_ENV=es babel src --out-dir es --ignore src/__tests__/*",
-    "format": "prettier-eslint --write 'src/**/*.js'"
+    "format": "prettier-eslint --write 'src/**/*.js'",
+    "test": "BABEL_ENV=test jest"
   }
 }
