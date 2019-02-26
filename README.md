@@ -14,12 +14,22 @@ yarn add use-redux
 You can get the redux state and the dispatch function with `useRedux` custom hooks.
 
 ```jsx
+import { useEffect } from 'react';
 import { useRedux } from 'use-redux';
 
-export const MyComponent = props => {
+export const Clock = props => {
   const [ state, dispatch ] = useRedux();
+  
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => dispatch({ type: 'SET', count: state.count + 1 }),
+      1000,
+    );
+    
+    return () => clearTimeout(timeout);
+  }, []);
 
-  return <div>Foo</div>
+  return state.count;
 };
 ```
 
@@ -49,17 +59,18 @@ First, surround your top component with the `Provider` and provide a [redux](htt
 
 ```jsx
 import { createStore } from 'redux';
-import { Provider } from 'use-redux';
+// The provider has a slightly different name so you can easily know where it came from
+import { ReduxProvider } from 'use-redux';
 // Or directly from react-redux 
-// import { Provider } from 'redux';
+// import { Provider } from 'react-redux';
 
 // redux store
 const store = createStore(reducers)
 
 ReactDOM.render(
-  <Provider store={store}>
+  <ReduxProvider store={store}>
     <App />
-  </Provider>,
+  </ReduxProvider>,
   document.getElementById('root')
 );
 ```
