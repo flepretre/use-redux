@@ -8,7 +8,7 @@ export const useRedux = () => {
   useEffect(() => {
     const unsubscribe = store.subscribe(() => setReduxState(store.getState()));
     return () => unsubscribe();
-  });
+  }, []);
 
   return [reduxState, store.dispatch];
 };
