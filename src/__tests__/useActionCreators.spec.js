@@ -1,20 +1,35 @@
 import { useActionCreators } from '../useActionCreators';
-import { useRedux } from '../useRedux';
+import { useContext } from 'react';
+import { ReactReduxContext } from 'react-redux';
 
-jest.mock('../useRedux', () => ({
-  useRedux: jest.fn((seletors, creators) => [
-    'state',
-    ...creators.map(creator => `action ${creator}`)
-  ])
-}));
-
-jest.unmock('../useActionCreators');
+jest.mock('react');
+jest.mock('react-redux');
 
 describe('useActionCreators', () => {
-  it('should return actions', () => {
-    const actions = useActionCreators(1, 2);
+  const dispatch = jest.fn(x => x);
+  const contextMock = {
+    store: { dispatch }
+  };
 
-    expect(actions).toEqual(['action 1', 'action 2']);
-    expect(useRedux).toHaveBeenCalledWith(undefined, [1, 2]);
+  beforeEach(() => {
+    useContext.mockReturnValue(contextMock);
+  });
+
+  const a1Creator = () => ({ type: 'FOO' });
+  const a2Creator = payload => ({ type: 'BAR', payload });
+
+  it('should return actions', () => {
+    const actions = useActionCreators(a1Creator, a2Creator);
+
+    expect(actions.length).toBe(2);
+    expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
+
+    const [a1, a2] = actions;
+
+    a1();
+    expect(dispatch).toHaveBeenCalledWith({ type: 'FOO' });
+
+    a2('payload');
+    expect(dispatch).toHaveBeenCalledWith({ type: 'BAR', payload: 'payload' });
   });
 });
