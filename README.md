@@ -61,7 +61,7 @@ export const MyComponent = props => {
 };
 ```
 
-See documentation for redux action creators and selectors.
+See documentation for redux [action creators](https://redux.js.org/glossary#action-creator) and [selectors](https://react-redux.js.org/using-react-redux/connect-mapstate#use-selector-functions-to-extract-and-transform-data).
 
 ### useSelectors
 
