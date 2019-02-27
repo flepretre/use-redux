@@ -39,6 +39,7 @@
     "build:commonjs": "BABEL_ENV=commonjs babel src --out-dir lib --ignore src/__tests__/**/*",
     "build:es": "BABEL_ENV=es babel src --out-dir es --ignore src/__tests__/**/*",
     "format": "prettier-eslint --write 'src/**/*.js'",
+    "prepublishOnly": "rm -rf es lib && yarn build",
     "test": "BABEL_ENV=test jest"
   }
 }
