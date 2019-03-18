@@ -6,10 +6,7 @@ export const useRedux = (selectors, actionCreators) => {
   const { getState, dispatch, subscribe } = store;
   const [reduxState, setReduxState] = useState(getState());
 
-  useEffect(() => {
-    const unsubscribe = subscribe(() => setReduxState(getState()));
-    return () => unsubscribe();
-  }, []);
+  useEffect(() => subscribe(() => setReduxState(getState())), []);
 
   let values;
   let actions;
