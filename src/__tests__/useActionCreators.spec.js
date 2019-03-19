@@ -17,6 +17,7 @@ describe('useActionCreators', () => {
 
   const a1Creator = () => ({ type: 'FOO' });
   const a2Creator = payload => ({ type: 'BAR', payload });
+  const a3Creator = (name, id) => ({ type: 'NAMEID', name, id });
 
   it('should return actions', () => {
     const actions = useActionCreators(a1Creator, a2Creator);
@@ -31,5 +32,14 @@ describe('useActionCreators', () => {
 
     a2('payload');
     expect(dispatch).toHaveBeenCalledWith({ type: 'BAR', payload: 'payload' });
+  });
+
+  it('shoud allow action creators with more than one parameter', () => {
+    const actions = useActionCreators(a3Creator);
+
+    const [a3] = actions;
+
+    a3('skywalker', 1);
+    expect(dispatch).toHaveBeenCalledWith({ type: 'NAMEID', name: 'skywalker', id: 1 });
   });
 });
