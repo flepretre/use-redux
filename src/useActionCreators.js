@@ -5,7 +5,7 @@ export const useActionCreators = (...actionCreators) => {
   const { store } = useContext(ReactReduxContext);
   const { dispatch } = store;
 
-  return actionCreators.map(actionCreator => params =>
-    dispatch(actionCreator(params))
+  return actionCreators.map(actionCreator => (...params) =>
+    dispatch(actionCreator(...params))
   );
 };
