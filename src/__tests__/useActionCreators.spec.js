@@ -40,6 +40,10 @@ describe('useActionCreators', () => {
     const [a3] = actions;
 
     a3('skywalker', 1);
-    expect(dispatch).toHaveBeenCalledWith({ type: 'NAMEID', name: 'skywalker', id: 1 });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'NAMEID',
+      name: 'skywalker',
+      id: 1
+    });
   });
 });
