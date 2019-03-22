@@ -4,14 +4,13 @@ import { ReactReduxContext } from 'react-redux';
 export const useRedux = (selectors, actionCreators) => {
   const { store } = useContext(ReactReduxContext);
   const { getState, dispatch, subscribe } = store;
-  const [reduxState, setReduxState] = useState(getState());
-
-  useEffect(() => subscribe(() => setReduxState(getState())), []);
+  const withSelectors = selectors && selectors.length;
+  const reduxState = getState();
 
   let values;
   let actions;
 
-  if (selectors && selectors.length) {
+  if (withSelectors) {
     values = selectors.map(selector => selector(reduxState));
   }
 
@@ -21,5 +20,30 @@ export const useRedux = (selectors, actionCreators) => {
     );
   }
 
-  return [].concat(values || reduxState, actions || dispatch);
+  const [state, setState] = useState(values || reduxState);
+
+  const updateState = () => {
+    const newReduxState = getState();
+
+    if (withSelectors) {
+      let hasChanged = false;
+      const newValues = [];
+
+      for (let i = 0; i < selectors.length; i++) {
+        newValues.push(selectors[i](newReduxState));
+        hasChanged |= newValues[i] !== values[i];
+      }
+
+      if (hasChanged) {
+        // Only rerender if selected values have changed
+        setState(newValues);
+      }
+    } else {
+      setState(newReduxState);
+    }
+  };
+
+  useEffect(() => subscribe(updateState), []);
+
+  return [].concat(state, actions || dispatch);
 };
