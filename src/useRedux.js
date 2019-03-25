@@ -1,7 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ReactReduxContext } from 'react-redux';
 
-export const useRedux = (selectors, actionCreators) => {
+const equalityFunction = (a, b) => a === b;
+const defaultOptions = {
+  areStatesEqual: equalityFunction
+};
+
+export const useRedux = (
+  selectors,
+  actionCreators,
+  options = defaultOptions
+) => {
   const { store } = useContext(ReactReduxContext);
   const { getState, dispatch, subscribe } = store;
   const withSelectors = selectors && selectors.length;
@@ -24,6 +33,11 @@ export const useRedux = (selectors, actionCreators) => {
 
   const updateState = () => {
     const newReduxState = getState();
+
+    // Allow optimization on subState equalities
+    if (typeof options.areStatesEqual === 'function' && options.areStatesEqual(reduxState, newReduxState)) {
+      return;
+    }
 
     if (withSelectors) {
       let hasChanged = false;

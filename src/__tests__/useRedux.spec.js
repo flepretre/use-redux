@@ -63,133 +63,227 @@ describe('useRedux', () => {
     getState.mockImplementation(() => reduxState);
   });
 
-  it('should return the current state and dispatch function', () => {
-    const [state, dispatch] = useRedux();
+  [
+    { desc: 'without options' },
+    { desc: 'with empty options', options: {} }
+  ].forEach(({ desc, options }) => {
+    describe(desc, () => {
+      it('should return the current state and dispatch function', () => {
+        const [state, dispatch] = useRedux(undefined, undefined, options);
 
-    expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
-    expect(getState).toHaveBeenCalled();
-    expect(useState).toHaveBeenCalledWith(reduxInitialState);
+        expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
+        expect(getState).toHaveBeenCalled();
+        expect(useState).toHaveBeenCalledWith(reduxInitialState);
 
-    expect(state).toEqual(reduxInitialState);
-    expect(dispatch).toBe(dispatch);
+        expect(state).toEqual(reduxInitialState);
+        expect(dispatch).toBe(dispatch);
+      });
+
+      it('should subscribe to the store', () => {
+        useRedux(undefined, undefined, options);
+
+        expect(useEffect).toHaveBeenCalled();
+        expect(subscribe).toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
+      });
+
+      it('should unsubscribe to the store', () => {
+        useRedux(undefined, undefined, options);
+
+        expect(useEffect).toHaveBeenCalled();
+        expect(unSubscribe).toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
+      });
+
+      it('should use selectors', () => {
+        const getFoo = ({ foo }) => foo;
+        const getBar = ({ bar }) => bar;
+
+        const [foo, bar, dispatch] = useRedux(
+          [getFoo, getBar],
+          undefined,
+          options
+        );
+
+        expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
+        expect(getState).toHaveBeenCalled();
+        expect(useState).toHaveBeenCalledWith(['bar', 'foo bar']);
+
+        expect(foo).toBe('bar');
+        expect(bar).toBe('foo bar');
+
+        expect(dispatch).toBe(dispatch);
+      });
+
+      it('should use action creators', () => {
+        const fooActionCreator = jest.fn(x => x);
+        const barActionCreator = jest.fn(x => x);
+
+        const [state, fooAction, barAction] = useRedux(
+          undefined,
+          [fooActionCreator, barActionCreator],
+          options
+        );
+
+        expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
+        expect(getState).toHaveBeenCalled();
+        expect(useState).toHaveBeenCalledWith(reduxInitialState);
+
+        expect(state).toEqual(reduxInitialState);
+
+        expect(fooAction('yolo')).toBe('yolo');
+        expect(fooActionCreator).toHaveBeenCalledWith('yolo');
+        expect(dispatch).toHaveBeenCalledWith('yolo');
+
+        expect(barAction(2)).toBe(2);
+        expect(barActionCreator).toHaveBeenCalledWith(2);
+        expect(dispatch).toHaveBeenCalledWith(2);
+      });
+
+      it('should use selectors and action creators', () => {
+        const getFoo = ({ foo }) => foo;
+        const getBar = ({ bar }) => bar;
+
+        const fooActionCreator = jest.fn(x => x);
+        const barActionCreator = jest.fn(x => x);
+
+        const [foo, bar, fooAction, barAction] = useRedux(
+          [getFoo, getBar],
+          [fooActionCreator, barActionCreator],
+          options
+        );
+
+        expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
+        expect(getState).toHaveBeenCalled();
+        expect(useState).toHaveBeenCalledWith(['bar', 'foo bar']);
+        expect(foo).toBe('bar');
+        expect(bar).toBe('foo bar');
+
+        expect(fooAction('yolo')).toBe('yolo');
+        expect(fooActionCreator).toHaveBeenCalledWith('yolo');
+        expect(dispatch).toHaveBeenCalledWith('yolo');
+
+        expect(barAction(2)).toBe(2);
+        expect(barActionCreator).toHaveBeenCalledWith(2);
+        expect(dispatch).toHaveBeenCalledWith(2);
+      });
+
+      it('should not call setState if selected values stay the same', () => {
+        const getFoo = ({ foo }) => foo;
+        const getBar = ({ bar }) => bar;
+
+        const [foo, bar, dispatch] = useRedux(
+          [getFoo, getBar],
+          undefined,
+          options
+        );
+
+        expect(setState).not.toHaveBeenCalled();
+
+        reduxState = { ...reduxState, a: 'b' };
+        runStoreListeners();
+
+        expect(setState).not.toHaveBeenCalled();
+        expect(foo).toBe('bar');
+        expect(bar).toBe('foo bar');
+
+        expect(dispatch).toBe(dispatch);
+      });
+
+      it('should call setState if selected values changed', () => {
+        const getFoo = ({ foo }) => foo;
+        const getBar = ({ bar }) => bar;
+
+        const [foo, bar, dispatch] = useRedux(
+          [getFoo, getBar],
+          undefined,
+          options
+        );
+
+        expect(setState).not.toHaveBeenCalled();
+
+        reduxState = { ...reduxState, foo: 'foo' };
+        runStoreListeners();
+
+        expect(setState).toHaveBeenCalledWith(['foo', 'foo bar']);
+        expect(foo).toBe('bar');
+        expect(bar).toBe('foo bar');
+
+        expect(dispatch).toBe(dispatch);
+      });
+    });
   });
 
-  it('should subscribe to the store', () => {
-    useRedux();
+  describe('with areStateEqual implementation in option', () => {
+    const options = { };
 
-    expect(useEffect).toHaveBeenCalled();
-    expect(subscribe).toHaveBeenCalled();
-    expect(setState).not.toHaveBeenCalled();
-  });
+    beforeEach(() => {
+      options.areStatesEqual = jest.fn();
+    });
 
-  it('should unsubscribe to the store', () => {
-    useRedux();
+    it('should not call setState if areStateEqual function return true', () => {
+      const getFoo = ({ foo }) => foo;
+      const getBar = ({ bar }) => bar;
+      options.areStatesEqual.mockReturnValue(true);
 
-    expect(useEffect).toHaveBeenCalled();
-    expect(unSubscribe).toHaveBeenCalled();
-    expect(setState).not.toHaveBeenCalled();
-  });
+      const [foo, bar, dispatch] = useRedux([getFoo, getBar], undefined, options);
 
-  it('should use selectors', () => {
-    const getFoo = ({ foo }) => foo;
-    const getBar = ({ bar }) => bar;
+      expect(setState).not.toHaveBeenCalled();
 
-    const [foo, bar, dispatch] = useRedux([getFoo, getBar]);
+      reduxState = { ...reduxState, foo: 'foo' };
+      runStoreListeners();
 
-    expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
-    expect(getState).toHaveBeenCalled();
-    expect(useState).toHaveBeenCalledWith(['bar', 'foo bar']);
+      expect(setState).not.toHaveBeenCalled();
+      expect(foo).toBe('bar');
+      expect(bar).toBe('foo bar');
 
-    expect(foo).toBe('bar');
-    expect(bar).toBe('foo bar');
+      expect(dispatch).toBe(dispatch);
+    });
 
-    expect(dispatch).toBe(dispatch);
-  });
+    it('should not call setState if selected values stay the same', () => {
+      const getFoo = ({ foo }) => foo;
+      const getBar = ({ bar }) => bar;
+      options.areStatesEqual.mockReturnValue(false);
 
-  it('should use action creators', () => {
-    const fooActionCreator = jest.fn(x => x);
-    const barActionCreator = jest.fn(x => x);
+      const [foo, bar, dispatch] = useRedux(
+        [getFoo, getBar],
+        undefined,
+        options
+      );
 
-    const [state, fooAction, barAction] = useRedux(undefined, [
-      fooActionCreator,
-      barActionCreator
-    ]);
+      expect(setState).not.toHaveBeenCalled();
 
-    expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
-    expect(getState).toHaveBeenCalled();
-    expect(useState).toHaveBeenCalledWith(reduxInitialState);
+      reduxState = { ...reduxState, a: 'b' };
+      runStoreListeners();
 
-    expect(state).toEqual(reduxInitialState);
+      expect(setState).not.toHaveBeenCalled();
+      expect(foo).toBe('bar');
+      expect(bar).toBe('foo bar');
 
-    expect(fooAction('yolo')).toBe('yolo');
-    expect(fooActionCreator).toHaveBeenCalledWith('yolo');
-    expect(dispatch).toHaveBeenCalledWith('yolo');
+      expect(dispatch).toBe(dispatch);
+    });
 
-    expect(barAction(2)).toBe(2);
-    expect(barActionCreator).toHaveBeenCalledWith(2);
-    expect(dispatch).toHaveBeenCalledWith(2);
-  });
+    it('should call setState if selected values changed', () => {
+      const getFoo = ({ foo }) => foo;
+      const getBar = ({ bar }) => bar;
+      options.areStatesEqual.mockReturnValue(false);
 
-  it('should use selectors and action creators', () => {
-    const getFoo = ({ foo }) => foo;
-    const getBar = ({ bar }) => bar;
+      const [foo, bar, dispatch] = useRedux(
+        [getFoo, getBar],
+        undefined,
+        options
+      );
 
-    const fooActionCreator = jest.fn(x => x);
-    const barActionCreator = jest.fn(x => x);
+      expect(setState).not.toHaveBeenCalled();
 
-    const [foo, bar, fooAction, barAction] = useRedux(
-      [getFoo, getBar],
-      [fooActionCreator, barActionCreator]
-    );
+      reduxState = { ...reduxState, foo: 'foo' };
+      runStoreListeners();
 
-    expect(useContext).toHaveBeenCalledWith(ReactReduxContext);
-    expect(getState).toHaveBeenCalled();
-    expect(useState).toHaveBeenCalledWith(['bar', 'foo bar']);
-    expect(foo).toBe('bar');
-    expect(bar).toBe('foo bar');
+      expect(setState).toHaveBeenCalledWith(['foo', 'foo bar']);
+      expect(foo).toBe('bar');
+      expect(bar).toBe('foo bar');
 
-    expect(fooAction('yolo')).toBe('yolo');
-    expect(fooActionCreator).toHaveBeenCalledWith('yolo');
-    expect(dispatch).toHaveBeenCalledWith('yolo');
-
-    expect(barAction(2)).toBe(2);
-    expect(barActionCreator).toHaveBeenCalledWith(2);
-    expect(dispatch).toHaveBeenCalledWith(2);
-  });
-
-  it('should not call setState if selected values stay the same', () => {
-    const getFoo = ({ foo }) => foo;
-    const getBar = ({ bar }) => bar;
-
-    const [foo, bar, dispatch] = useRedux([getFoo, getBar]);
-
-    expect(setState).not.toHaveBeenCalled();
-
-    reduxState = { ...reduxState, a: 'b' };
-    runStoreListeners();
-
-    expect(setState).not.toHaveBeenCalled();
-    expect(foo).toBe('bar');
-    expect(bar).toBe('foo bar');
-
-    expect(dispatch).toBe(dispatch);
-  });
-
-  it('should call setState if selected values changed', () => {
-    const getFoo = ({ foo }) => foo;
-    const getBar = ({ bar }) => bar;
-
-    const [foo, bar, dispatch] = useRedux([getFoo, getBar]);
-
-    expect(setState).not.toHaveBeenCalled();
-
-    reduxState = { ...reduxState, foo: 'foo' };
-    runStoreListeners();
-
-    expect(setState).toHaveBeenCalledWith(['foo', 'foo bar']);
-    expect(foo).toBe('bar');
-    expect(bar).toBe('foo bar');
-
-    expect(dispatch).toBe(dispatch);
+      expect(dispatch).toBe(dispatch);
+    });
   });
 });
