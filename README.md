@@ -1,6 +1,25 @@
-# use-redux
+# DEPRECATED  
 
 Hook to access redux
+
+:warning: [react-redux](https://react-redux.js.org/) now provide hooks support.
+I strongly recommend you to use the official [react-redux](https://react-redux.js.org/) implementation.
+If you already use this package switching to [react-redux](https://react-redux.js.org/) should not be too difficult.
+
+## Migration to [react-redux](https://react-redux.js.org/)
+
+### Provider
+First thing to do is to replace the use-redux provider by the react-redux one. Just change the import, it the provider underneath.
+
+### useRedux
+The `use-redux` function was remove from the final implementation of [react-redux](https://react-redux.js.org/) hooks' so I recommend to use `useSelector` and `useDispatch`.
+
+### useSelectors
+Hooks are designed to be called multiple time in the same component. If you have more than one selector, just make one call with `useSelector` for each selector.
+
+### useActionCreators
+For this one you have to use `useDispatch` that give you access to the `dispatch` function.
+To understand the switch from bindActionCreators in connect to the dispatch function with hooks I recommend you to read [this comment from Dan Abramov](https://github.com/reduxjs/react-redux/issues/1252#issuecomment-488160930).
 
 ## Getting started
 
@@ -10,7 +29,7 @@ Hook to access redux
 yarn add use-redux
 ```
 
-### use-redux
+### useRedux
 You can get the redux state and the dispatch function with `useRedux` custom hooks.
 
 ```jsx
