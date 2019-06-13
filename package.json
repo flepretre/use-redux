@@ -18,16 +18,16 @@
     "state"
   ],
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.3.3",
-    "@babel/plugin-proposal-object-rest-spread": "7.3.2",
-    "@babel/preset-env": "7.3.1",
+    "@babel/cli": "7.4.4",
+    "@babel/core": "7.4.5",
+    "@babel/plugin-proposal-object-rest-spread": "7.4.4",
+    "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
-    "@m6web/eslint-plugin-react": "3.2.0",
-    "babel-jest": "24.1.0",
-    "jest": "24.1.0",
-    "react": "16.8.3",
-    "react-redux": "6.0.1",
+    "@m6web/eslint-plugin-react": "3.4.0",
+    "babel-jest": "24.8.0",
+    "jest": "24.8.0",
+    "react": "16.8.6",
+    "react-redux": "7.1.0",
     "redux": "4.0.1"
   },
   "peerDependencies": {
